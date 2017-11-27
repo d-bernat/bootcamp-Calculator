@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Calculator
+namespace bootcamp
 {
-    class Program
+    class Calculator
     {
         static void Main(string[] args)
         {
-            Calculator calc = new Calculator();
+            SimpleCalculator calc = new SimpleCalculator();
             String result = calc.add(3, 4) + "\n";
             Console.Write(result);
             Console.Read();
@@ -18,7 +18,7 @@ namespace Calculator
     }
 
 
-    class Calculator
+    class SimpleCalculator
     {
         public long add(int x, int y)
         {
