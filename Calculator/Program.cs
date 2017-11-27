@@ -10,6 +10,19 @@ namespace Calculator
     {
         static void Main(string[] args)
         {
+            Calculator calc = new Calculator();
+            String result = calc.add(3, 4) + "\n";
+            Console.Write(result);
+            Console.Read();
+        }
+    }
+
+
+    class Calculator
+    {
+        public long add(int x, int y)
+        {
+            return x + y;
         }
     }
 }
