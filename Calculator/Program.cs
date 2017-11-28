@@ -10,19 +10,22 @@ namespace bootcamp
     {
         public static void Main(string[] args)
         {
+            GetProcessorPipeline().First().Process();
+            Console.Read();
+        }
+
+        private static IProcessor[] GetProcessorPipeline()
+        {
             IProcessor[] p = {
                 new PreProcessor(),
                 new CoProcessor(),
                 new MainProcessor(),
                 new PostProcessor()
             };
-
             var i = 0;
-            while(i < p.Length - 1)
+            while (i < p.Length - 1)
                 p[i].SetSuccessor(p[++i]);
-            p[0].Process();
-
-            Console.Read();
+            return p;
         }
     }
 
