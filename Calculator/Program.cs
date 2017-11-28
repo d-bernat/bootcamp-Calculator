@@ -10,108 +10,77 @@ namespace bootcamp
     {
         public static void Main(string[] args)
         {
-            ICalculator calc = new SciCalculator();
-            string result = calc.substr(3, 4) + "\n";
+            IProcessor[] p = {
+                new PreProcessor(),
+                new CoProcessor(),
+                new MainProcessor(),
+                new PostProcessor()
+            };
 
-            Console.Write(result);
-            foreach(string arg in args)
-            {
-                Console.WriteLine(arg);
-            }
-            try
-            {
-                double.Parse("123.452");
-            }catch(Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            finally
-            {
-                Console.WriteLine("finally");
-            }
-            Console.WriteLine(Environment.UserName);
-
-            Console.WriteLine(calc.getDateTime().Date);
-
-
+            var i = 0;
+            while(i < p.Length - 1)
+                p[i].SetSuccessor(p[++i]);
+            p[0].Process();
 
             Console.Read();
         }
     }
 
 
-    class SimpleCalculator : ICalculator
+    interface IProcessor
     {
-        public long add(int x, int y)
+        void Process();
+        void SetSuccessor(IProcessor successor);
+    }
+
+    abstract class AbstractProcessor: IProcessor
+    {
+        private IProcessor successor;
+
+        public virtual void Process()
         {
-            return x + y;
+            successor?.Process();
         }
 
-        public DateTime getDateTime()
+        public void SetSuccessor(IProcessor successor)
         {
-            throw new NotImplementedException();
-        }
-
-        public TimeSpan getDateTimeSpan()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong substr(int x, int y)
-        {
-            return (ulong)(x - y);
+            this.successor = successor;
         }
     }
 
-    class SciCalculator : ICalculator
+    class PreProcessor: AbstractProcessor
     {
-        public long add(int x, int y)
+        public override void Process()
         {
-            return x + y;
-        }
-
-        public DateTime getDateTime()
-        {
-            return DateTime.Now;
-        }
-
-        public TimeSpan getDateTimeSpan()
-        {
-            throw new NotImplementedException();
-        }
-
-        public ulong substr(int x, int y)
-        {
-            IList<String> l = new List<String>();
-            l.Add("ahoj");
-            l.Add("vole");
-
-            foreach (String s in l)
-            {
-                Console.WriteLine(s);
-
-            }
-
-            foreach(string s in Environment.GetCommandLineArgs())
-                Console.WriteLine(s);
-            unchecked
-            {
-                return (ulong)(x - y);
-            }
+            Console.WriteLine("pre processing");
+            base.Process();
         }
     }
 
-    interface ICalculator : IDateTimeable
+    class CoProcessor : AbstractProcessor
     {
-        long add(int x, int y);
-        ulong substr(int x, int y);
+        public override void Process()
+        {
+            Console.WriteLine("co processing");
+            base.Process();
+        }
+    }
+    class MainProcessor: AbstractProcessor
+    {
+        public override void Process()
+        {
+            Console.WriteLine("main processing");
+            base.Process();
+        }
     }
 
-    interface IDateTimeable
+    class PostProcessor: AbstractProcessor
     {
-        DateTime getDateTime();
-        TimeSpan getDateTimeSpan();
-
+        public override void Process()
+        {
+            Console.WriteLine("post processing");
+            base.Process();
+        }
     }
 
 }
