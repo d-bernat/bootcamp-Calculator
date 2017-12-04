@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Calculator.tools;
+using Calculator.tools.courier;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,13 +8,26 @@ using System.Threading.Tasks;
 
 namespace bootcamp
 {
+
+    public delegate void Send(string message);
+
     class Calculator
     {
+        
+
         public static void Main(string[] args)
         {
             GetProcessorPipeline().First().Process();
+            ICourier Courier = new PlainQueueCourier();
+            ICourier anotherCourier = new PlainQueueCourier();
+            Courier.Send("send this message");
+            Courier.Receive("this is selector", 1000L);
+            new Send(Courier.Send)("message");
+            Send s = new Send(Courier.Send) + new Send(anotherCourier.Send);
+            s("send another message");
             Console.Read();
         }
+
 
         private static IProcessor[] GetProcessorPipeline()
         {

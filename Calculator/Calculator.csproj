@@ -75,6 +75,10 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="tools\Courier.cs" />
+    <Compile Include="tools\courier\PlainQueueCourier.cs" />
+    <Compile Include="tools\receiver\Receiver.cs" />
+    <Compile Include="tools\sender\Sender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
