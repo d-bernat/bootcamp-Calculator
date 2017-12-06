@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace bootcamp
 {
 
-    
+
 
     class Calculator
     {
@@ -45,9 +45,20 @@ namespace bootcamp
 
             };
             button.Click += (sender, arg) => { Console.WriteLine((sender as Button).name); };
-            button.Click += (sender, arg) => { Console.WriteLine((sender as Button).name + " from lambda"); };
+            button.Click += (sender, arg) => { Console.WriteLine((sender as Button).name + " from lambda {0}", arg); };
 
             button.OnClick();
+
+            var processorDescArr = from p in GetProcessorPipeline()
+                                   select new
+                                   {
+                                       clazz = p.getProcessorClassName(),
+                                       _abstract = p.GetType().IsAbstract
+                                   };
+
+            foreach (var desc in processorDescArr)
+                Console.WriteLine(desc.clazz + " : " + desc._abstract);
+
             Console.Read();
         }
 
@@ -97,6 +108,16 @@ namespace bootcamp
     }
 
 
+    static class ProcessorExtension
+    {
+
+        public static string getProcessorClassName(this IProcessor pu)
+        {
+            return pu.GetType().ToString();
+        }
+
+    }
+
     class Button
     {
         public delegate void EventHandler(object sender, int arg);
@@ -104,17 +125,18 @@ namespace bootcamp
         public string name { get; set; }
         public void OnClick()
         {
-            Click?.Invoke(this, 1);
+            Click?.Invoke(this, new Random().Next(0, 1000));
         }
 
     }
+
 
     class A
     {
         public virtual string message { get; set; }
     }
 
-    class B: A
+    class B : A
     {
         public override string message
         {
@@ -172,7 +194,7 @@ namespace bootcamp
 
     abstract class AbstractProcessor : IProcessor
     {
-        private IProcessor successor;
+        IProcessor successor;
 
         public virtual void Process()
         {
